@@ -251,7 +251,9 @@ def mmoe_modules(features,mode,params):
         # compute cl loss
         #归一化处理再相乘的意义
         norm_rep = experts / tf.norm(experts,axis = 2,keepdims = True)#last_hidden_states.norm(dim=2, keepdim=True) ord="fro",
-        cosine_scores = norm_rep @ tf.compat.v1.matrix_transpose(norm_rep) #perm=[0, 2, 1]
+        norm_rep_1 = tf.compat.v1.nn.dropout(norm_rep,keep_prob=0.9)
+        norm_rep_2 = tf.compat.v1.nn.dropout(norm_rep,keep_prob=0.9)
+        cosine_scores = norm_rep_1 @ tf.compat.v1.matrix_transpose(norm_rep_2) #perm=[0, 2, 1]
         #assert cosine_scores.shape == [bsz, seqlen, seqlen]
         #tmp_matrix = tf.squeeze(experts[:,:,0:1], axis=2)
         #input_ids = tf.ones_like(tmp_matrix, dtype=tf.float32)
