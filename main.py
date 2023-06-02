@@ -6,7 +6,6 @@ from parse_config import get_config
 from export import serving_input_receiver_fn, main as export_main
 from predict import main as predict_main
 from recall_rank_metrics import main as metrics_main
-from update_model import main as update_model_main
 tf.compat.v1.disable_eager_execution()
 
 flags = tf.compat.v1.flags
@@ -24,11 +23,7 @@ def main(_):
                                         save_checkpoints_steps=10000, log_step_count_steps=100,
                                         session_config=tf.compat.v1.ConfigProto(log_device_placement=False,
                                                                                 gpu_options=tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.5)))
-    '''
-    run_config = tf.estimator.RunConfig(model_dir=cf['train.model_dir'], save_summary_steps=100,
-                                        save_checkpoints_steps=10, log_step_count_steps=100,
-                                        session_config=tf.compat.v1.ConfigProto(log_device_placement=False)) 
-    '''
+    
     # constructs an `Estimator` instance
     estimator = tf.estimator.Estimator(model_fn=model_fn, config=run_config, params=cf)
 
@@ -44,17 +39,13 @@ def main(_):
                                       steps=1000, exporters=exporter, start_delay_secs=60, throttle_secs=30)
 
     # train and evaluate
-    #tf.estimator.train_and_evaluate(estimator=estimator, train_spec=train_spec, eval_spec=eval_spec)
+    tf.estimator.train_and_evaluate(estimator=estimator, train_spec=train_spec, eval_spec=eval_spec)
 
     # export and predict and metrics
     #export_main(cf)
     predict_main(cf)
-    #metrics_main(cf, FLAGS.province)
-    if "data.feedback_sample_path" in cf: 
-        predict_feedback_main(cf)
-        metrics_feedback_main(cf, FLAGS.province)
-    #if cf["train.daily_update"]:
-        #update_model_main(cf, FLAGS.province, FLAGS.config_file_path, FLAGS.timestamp)
+    metrics_main(cf, FLAGS.province)
+    
 if __name__ == '__main__':
     if not os.path.exists(cf['train.model_dir']):
         os.makedirs(cf['train.model_dir'])
