@@ -37,9 +37,8 @@ optional arguments:
                         input batch size
   --hiddenSize HIDDENSIZE
                         hidden state size
-  --epoch EPOCH         the number of epochs to train for
+  --epoch EPOCH         the number of epochs to train 
   --lr LR               learning rate
-                        decay
   --embeddingSize EMBEDDINGSIZE
                         input embedding size
   --expertnum  EXPERTNUM
