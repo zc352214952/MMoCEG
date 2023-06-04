@@ -9,13 +9,14 @@ This code is used to reproduce the main experiment of our paper MMoCEG.
 + CUDA Version 11.0
 
 ## Code
-+ main.py 
++ main.py
 + parse_config.py:config file
-+ input_fn.py
-+ model_fn.py
-+ MMoCEG.py
-+ export.py
-+ predict.py
++ input_fn.py:process input data
++ model_fn.py:build network structure
++ MMoCEG.py:model file 
++ export.py:export result file
++ predict.py:predict result file
++ recall_rank_metrics: evaluate result file 
 
 ## Usage
 
